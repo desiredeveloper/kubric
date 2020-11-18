@@ -3,6 +3,7 @@ import pandas
 import scipy
 import numpy
 import sys
+from scipy import stats
 
 
 TRAIN_DATA_URL = "https://storage.googleapis.com/kubric-hiring/linreg_train.csv"
@@ -18,11 +19,16 @@ def predict_price(area) -> float:
     response = requests.get(TRAIN_DATA_URL)
     train_data = response.text.split('\n')
     X , Y = train_data[0].split(',')[1:],train_data[1][:-1].split(',')[1:]
+    
+    x = numpy.array(X)
+    x = x.astype(numpy.float)
+    y = numpy.array(Y)
+    y = y.astype(numpy.float)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
 
-
-    return area*0.05
+    return slope*area+intercept
     # YOUR IMPLEMENTATION HERE
-    ...
+    # ...
 
 
 if __name__ == "__main__":
